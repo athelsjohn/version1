@@ -1,0 +1,9 @@
+2025-06-09 12:12:39,130 [INFO] RETRAIN: Configuration loaded successfully
+2025-06-09 12:12:39,299 [INFO] RETRAIN: Loaded 1001 customers and 44799 orders
+2025-06-09 12:12:39,299 [INFO] RETRAIN: Training clustering models...
+2025-06-09 12:12:39,510 [INFO] RETRAIN: Models saved successfully
+2025-06-09 12:12:39,510 [INFO] RETRAIN: Training collaborative filtering models...
+2025-06-09 12:12:40,087 [INFO] RETRAIN: CF model for cluster 0 saved
+2025-06-09 12:12:40,163 [INFO] RETRAIN: CF model for cluster 2 saved
+2025-06-09 12:12:40,445 [INFO] RETRAIN: CF model for cluster 1 saved
+2025-06-09 12:12:40,923 [INFO] RETRAIN: Retraining completed successfully

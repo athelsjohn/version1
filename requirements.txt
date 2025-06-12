@@ -1,0 +1,9 @@
+fastapi
+uvicorn
+pandas
+scikit-learn
+iniconfig
+pytest
+schedule
+pydantic
+surprise
