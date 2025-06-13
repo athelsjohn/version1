@@ -1,9 +1,0 @@
-2025-06-09 12:27:24,608 [INFO] SCHEDULER_HOURLY: Hourly scheduler started. Will run update_relations.py every hour.
-2025-06-09 13:00:24,613 [INFO] SCHEDULER_HOURLY: Running update_relations.py
-2025-06-09 13:00:27,630 [INFO] SCHEDULER_HOURLY: update_relations.py completed successfully.
-2025-06-09 14:31:16,550 [INFO] SCHEDULER_HOURLY: Running update_relations.py
-2025-06-09 14:31:18,493 [INFO] SCHEDULER_HOURLY: update_relations.py completed successfully.
-2025-06-09 15:29:09,517 [INFO] SCHEDULER_HOURLY: Running update_relations.py
-2025-06-09 15:29:11,976 [INFO] SCHEDULER_HOURLY: update_relations.py completed successfully.
-2025-06-09 16:00:11,984 [INFO] SCHEDULER_HOURLY: Running update_relations.py
-2025-06-09 16:00:13,918 [INFO] SCHEDULER_HOURLY: update_relations.py completed successfully.
