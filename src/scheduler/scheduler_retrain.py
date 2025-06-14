@@ -24,20 +24,30 @@ def run_retrain():
             ["python3", SCRIPT_PATH],
             capture_output=True,
             text=True,
-            timeout=7200  # 2 hour timeout
+            timeout=7200,
+            check = True
         )
-        if result.returncode == 0:
-            logger.info("retrain_models.py completed successfully.")
-            logger.debug(result.stdout)
-        else:
-            logger.error(f"retrain_models.py failed: {result.stderr}")
+        logger.info("retrain_models.py completed successfully.")
+    except subprocess.TimeoutExpired:
+        logger.error("Retrain process timed out")
+    except subprocess.CalledProcessError as e:
+        logger.error(f"Retraining failed with exit code: {str(e)}")
+    except FileNotFoundError:
+        logger.error("File not found")
     except Exception as e:
-        logger.exception("Error running retrain_models.py")
+        logger.error(f"Error running retrain_models.py: {str(e)}")
 
 # Schedule to run every 72 hours
 schedule.every(72).hours.do(run_retrain)
 logger.info("72-hour scheduler started. Will run retrain_models.py every 72 hours.")
 
 while True:
-    schedule.run_pending()
-    time.sleep(60)
+    try:
+        schedule.run_pending()
+        time.sleep(60)
+    except KeyboardInterrupt:
+        logger.info("Scheduler stopped by user")
+        break
+    except Exception as e:
+        logger.info(f'Scheduler error: {str(e)}')
+        break

@@ -5,7 +5,7 @@ client = TestClient(app)
 
 def test_add_order():
     order = {
-        "Order_ID": 99995,
+        "Order_ID": 99994,
         "Customer_ID": "CUST2002",
         "Warehouse_ID": "WH001",
         "Customer_Age": 25,

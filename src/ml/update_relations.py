@@ -90,7 +90,7 @@ def update_relations_main(config_path = "/home/athel/Desktop/Litmus7/order/confi
             invalid_numeric = df[numeric_cols].isnull().any(axis = 1)
             if invalid_numeric.any():
                 logger.warning(f"Dropping {invalid_numeric.sum()} rows with invalid numeric data")
-                df = df[~invalid_numericx]
+                df = df[~invalid_numeric]
             df['Date'] = pd.to_datetime(df['Date'], errors='coerce')
             df = df.dropna(subset=['Date']).copy()
             df['Sales'] = df['Quantity'] * df['Price per Unit']
@@ -118,12 +118,10 @@ def update_relations_main(config_path = "/home/athel/Desktop/Litmus7/order/confi
             product.to_csv(PRODUCT_NORM, index=False)
             logger.info(f"Product data saved to {PRODUCT_NORM}")
         except Exception as e:
-            logger.exception("Normalization failed")
-            raise
+            handle_critical_error(f"Normalization failed: {str(e)}")
 
     # Customer features
         try:
-            logger.info("Creating customer dataframe...")
             customer_df = df.groupby('Customer ID').agg(
                 total_spend=('Sales', 'sum'),
                 purchase_frequency=('Order ID', 'nunique'),
@@ -136,15 +134,14 @@ def update_relations_main(config_path = "/home/athel/Desktop/Litmus7/order/confi
             customer_df.to_csv(CUSTOMER_DF_PATH, index=False)
             logger.info(f"Customer dataframe saved to {CUSTOMER_DF_PATH}")
         except Exception as e:
-            logger.exception("Customer dataframe creation failed")
-            raise
+            handle_critical_error(f"Customer dataframe creation failed {str(e)}")
 
         # Save merged data
         try:
             df.to_csv(MERGED_DATA_PATH, index=False)
             logger.info("Merged data saved")
         except Exception as e:
-            logger.exception("Failed to save merged data")
+            handle_critical_error(f"Failed to save merged data: {str(e)}")
             raise
 
     logger.info("Hourly relations update completed successfully.")

@@ -24,20 +24,33 @@ def run_update():
             ["python3", SCRIPT_PATH],
             capture_output=True,
             text=True,
-            timeout=3600  # 1 hour timeout
+            timeout=3600,
+            check = True
         )
-        if result.returncode == 0:
-            logger.info("update_relations.py completed successfully.")
-            logger.debug(result.stdout)
-        else:
-            logger.error(f"update_relations.py failed: {result.stderr}")
+        logger.info("update_relations.py completed successfully.")
+    except subprocess.TimeoutExpired:
+            logger.error(f"Update process timed out at 1 hour")
+    except subprocess.CalledProcessError as e:
+        logger.error("Update failed with exit code {e.returncode}: {e.stderr}")
+    except FileNotFoundError:
+        logger.error("Script not found")
     except Exception as e:
-        logger.exception("Error running update_relations.py")
-
+        logger.error(f"Unexpected error: {str(e)}")
+    else:
+         if "error" in result.stdout.lower():
+              logger.warning("Process completed but output contains errors")
+        
 # Schedule to run every hour on the hour
 schedule.every().hour.at(":00").do(run_update)
 logger.info("Hourly scheduler started. Will run update_relations.py every hour.")
 
 while True:
-    schedule.run_pending()
-    time.sleep(60)
+    try:
+        schedule.run_pending()
+        time.sleep(60)
+    except KeyboardInterrupt:
+        logger.info("Scheduler stopped by user")
+        break
+    except Exception as e:
+        logger.error(f"Scheduler error: {str(e)}")
+        break

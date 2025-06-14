@@ -2,6 +2,7 @@ import os
 import pandas as pd
 from datetime import datetime
 import sys
+import pytest
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'src')))
 
@@ -31,24 +32,30 @@ product_norm = {product_norm}
 """
     config_path.write_text(config_content)
 
-    df = pd.DataFrame({
-        'Order ID': [1],
-        'Customer ID': ['CUST1'],
-        'Warehouse ID': ['WH001'],
-        'Customer Age': [30],
-        'Customer Gender': ['M'],
-        'Date': [datetime.now().strftime('%Y-%m-%d')],
-        'Product ID': ['Product_1'],
-        'SKU ID': ['SKU_1'],
-        'Category': ['Cat1'],
-        'Quantity': [2],
-        'Price per Unit': [10.0]
-    })
-    df.to_csv(merged_data_path, index=False)
+    try:
+        df = pd.DataFrame({
+            'Order ID': [1],
+            'Customer ID': ['CUST1'],
+            'Warehouse ID': ['WH001'],
+            'Customer Age': [30],
+            'Customer Gender': ['M'],
+            'Date': [datetime.now().strftime('%Y-%m-%d')],
+            'Product ID': ['Product_1'],
+            'SKU ID': ['SKU_1'],
+            'Category': ['Cat1'],
+            'Quantity': [2],
+            'Price per Unit': [10.0]
+        })
+        df.to_csv(merged_data_path, index=False)
 
-    update_relations_main(str(config_path))
+        update_relations_main(str(config_path))
 
-    assert os.path.exists(order_info_norm)
-    assert os.path.exists(order_line_norm)
-    assert os.path.exists(product_norm)
-    assert os.path.exists(customer_df_path)
+        assert os.path.exists(order_info_norm)
+        assert os.path.exists(order_line_norm)
+        assert os.path.exists(product_norm)
+        assert os.path.exists(customer_df_path)
+
+    except SystemExit as e:
+        pytest.fail(f"Update failed with exit code {e.code}")
+    except Exception as e:
+        pytest.fail(f"Test failed: {str(e)}")
