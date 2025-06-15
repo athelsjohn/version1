@@ -29,7 +29,24 @@ def handle_critical_error(message, exit_code = 1):
     sys.exit(exit_code)
 
 def retrain_models_main(config_path = "/home/athel/Desktop/Litmus7/order/config.ini"):
-    # Load config
+    
+    """Main model retraining workflow.
+    
+    Execution flow:
+    1. Load and validate configuration
+    2. Load and validate customer/order data
+    3. Feature engineering and clustering
+    4. Model training and persistence
+    5. Data versioning with cluster assignments
+    
+    Args:
+        config_path: Path to INI configuration file
+    
+    Raises:
+        SystemExit: For unrecoverable errors in configuration, data loading, 
+                   model training, or persistence
+    """
+    
     try:
         if not os.path.exists(config_path):
             raise FileNotFoundError(f"Config File not found: {config_path}")

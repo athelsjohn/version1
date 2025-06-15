@@ -18,6 +18,21 @@ logger = logging.getLogger(__name__)
 SCRIPT_PATH = "/home/athel/Desktop/Litmus7/order/retrain_models.py"
 
 def run_retrain():
+
+    """Execute the retrain_models.py script and handle process results.
+
+    Runs the retrain_models.py script as a subprocess, captures output,
+    and logs process status and errors. Handles timeouts, process failures,
+    missing scripts, and unexpected errors.
+
+    Logs:
+        INFO: Process start, successful completion
+        ERROR: Timeout, process failure, missing script, unexpected errors
+
+    Raises:
+        None: All exceptions are caught and logged
+    """
+
     logger.info("Running retrain_models.py")
     try:
         result = subprocess.run(

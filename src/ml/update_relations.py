@@ -24,7 +24,24 @@ def handle_critical_error(message, exit_code = 1):
 
 
 def update_relations_main(config_path = "/home/athel/Desktop/Litmus7/order/config.ini"):
-    # Load config
+
+
+    """Main pipeline for updating customer relations and order data.
+    
+    Performs end-to-end processing of order data including:
+    1. Configuration loading and validation
+    2. Data ingestion and merging
+    3. Data cleaning and feature engineering
+    4. Creation of normalized database tables
+    5. Customer behavioral feature calculation
+    6. Data persistence
+
+    Raises:
+        SystemExit: For critical errors in configuration or data processing
+        ValueError: For missing configuration entries or invalid data
+        Exception: For unexpected errors during processing
+    """
+
     try:
         if not os.path.exists(config_path):
             raise FileNotFoundError(f"Config file not found: {config_path}")

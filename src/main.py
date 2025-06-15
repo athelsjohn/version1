@@ -34,6 +34,21 @@ CF_MODEL_TEMPLATE = PATHS.get("cf_model_template")
 app = FastAPI()
 
 def load_models_and_data():
+    
+    """Loads machine learning models and data from disk.
+
+    This function loads:
+    - KMeans clustering model
+    - PowerTransformer model
+    - PCA model
+    - Collaborative filtering models (one per cluster)
+    - Customer data
+    - Merged order data
+
+    Raises:
+        RuntimeError: If any model or data file cannot be loaded.
+    """
+    
     global model_kmeans, pt, pca, cf_models, customer_df, df
     try:
         logger.info("Loading machine learning models...")
@@ -61,6 +76,27 @@ def load_models_and_data():
 load_models_and_data()
 
 class OrderLine(BaseModel):
+
+    """Pydantic model for order data.
+
+    Defines the structure and validation for order data.
+    Uses field aliases to match CSV column names.
+    Validates ID formats using regular expressions.
+
+    Attributes:
+        Order_ID: The unique order ID.
+        Customer_ID: The customer ID.
+        Warehouse_ID: The warehouse ID.
+        Customer_Age: The customer's age.
+        Customer_Gender: The customer's gender.
+        Date: The order date.
+        Product_ID: The product ID.
+        SKU_ID: The SKU ID.
+        Category: The product category.
+        Quantity: The quantity ordered.
+        Price_per_Unit: The price per unit.
+    """
+
     model_config = ConfigDict(
         populate_by_name=True
     )
@@ -106,7 +142,21 @@ class OrderLine(BaseModel):
 
 @app.post("/orders")
 def add_order(order: OrderLine):
-    """Add a new order to MergedData.csv"""
+    """Adds a new order to the merged data CSV.
+
+    Validates the order, checks for duplicates, calculates derived fields (sales, recency, order gap),
+    and appends the order to the merged data file.
+
+    Args:
+        order (OrderLine): The order data to add.
+
+    Returns:
+        dict: A message indicating success or failure.
+
+    Raises:
+        HTTPException: If a duplicate order is detected or if an error occurs.
+    """
+
     try:
         logger.info(f"Received new order request: {order.model_dump()}")
         # Use by_alias to ensure columns match CSV ("Order ID", etc.)
@@ -162,7 +212,21 @@ def add_order(order: OrderLine):
 
 @app.post("/users")
 def predict_next_product(customer_id: str):
-    """Get product recommendations for a customer"""
+
+    """Generates product recommendations for a customer.
+
+    Uses customer features to determine the customer's cluster, then uses the collaborative filtering
+    model for that cluster to recommend products.
+
+    Args:
+        customer_id (str): The customer ID to generate recommendations for.
+
+    Returns:
+        dict: A list of recommended product IDs.
+
+    Raises:
+        HTTPException: If the customer is not found or if an error occurs.
+    """
     try:
         logger.info(f"Starting recommendation process for {customer_id}")
         cust_row = customer_df[customer_df['Customer ID'] == customer_id]
@@ -189,7 +253,21 @@ def predict_next_product(customer_id: str):
 
 @app.get("/orders")
 def order_exists(order_id: int, product_id: str, sku_id: str):
-    """Check if an order line exists in MergedData.csv"""
+
+    """Checks if an order line exists in the merged data CSV.
+
+    Args:
+        order_id (int): The order ID.
+        product_id (str): The product ID.
+        sku_id (str): The SKU ID.
+
+    Returns:
+        dict: A dictionary with the key 'exists' indicating whether the order line exists.
+
+    Raises:
+        HTTPException: If an error occurs while checking for the order.
+    """
+
     try:
         logger.info(f"Checking existence: Order {order_id}, Product {product_id}, SKU {sku_id}")
         if not os.path.exists(MERGED_DATA_PATH):

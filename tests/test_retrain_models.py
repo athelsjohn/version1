@@ -9,6 +9,27 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..',
 from ml.retrain_models import retrain_models_main
 
 def test_retrain_models_creates_models(tmp_path):
+    """Tests the model retraining pipeline end-to-end.
+    
+    Verifies that the retrain_models_main function:
+    1. Processes input customer and order data
+    2. Generates clustering models (KMeans, PowerTransformer, PCA)
+    3. Creates collaborative filtering models per cluster
+    4. Persists all models to disk
+    
+    Args:
+        tmp_path (pathlib.Path): pytest fixture providing temporary directory path
+    
+    Steps:
+        1. Creates temporary config file with test paths
+        2. Generates sample customer and order data
+        3. Executes retraining pipeline
+        4. Verifies output model file creation
+    
+    Raises:
+        pytest.Fail: If models are not generated or unexpected errors occur
+    """
+    
     config_path = tmp_path / "config.ini"
     customer_df_path = tmp_path / "customer_df.csv"
     merged_data_path = tmp_path / "MergedData.csv"

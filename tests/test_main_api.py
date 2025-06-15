@@ -14,6 +14,17 @@ logger = logging.getLogger(__name__)
 client = TestClient(app)
 
 def test_add_order():
+
+    """Tests the order creation endpoint.
+
+    Verifies that the `/orders` POST endpoint correctly processes a new order,
+    returns a success status (200), and includes the expected success message.
+    Logs the test result and any errors encountered.
+
+    Raises:
+        Exception: If the test fails, logs the error and re-raises.
+    """
+
     try:
         order = {
             "Order_ID": 99994,
@@ -37,6 +48,17 @@ def test_add_order():
         raise
 
 def test_order_exists():
+
+    """Tests the order existence endpoint.
+
+    Verifies that the `/orders` GET endpoint correctly checks if an order exists,
+    returns a success status (200), and provides the correct existence status.
+    Logs the test result and any errors encountered.
+
+    Raises:
+        Exception: If the test fails, logs the error and re-raises.
+    """
+
     try:
         response = client.get("/orders?order_id=99999&product_id=Product_123&sku_id=SKU_456")
         assert response.status_code == 200
@@ -47,6 +69,16 @@ def test_order_exists():
         raise
 
 def test_user_recommendation():
+
+    """Tests the user recommendation endpoint.
+
+    Verifies that the `/users` POST endpoint responds with a valid status (200 or 404)
+    when requesting recommendations for a customer. Logs the test result and any errors.
+
+    Raises:
+        Exception: If the test fails, logs the error and re-raises.
+    """
+
     try:
         response = client.post("/users?customer_id=CUSTTEST")
         assert response.status_code in (200, 404)

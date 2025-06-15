@@ -9,7 +9,27 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..',
 from ml.update_relations import update_relations_main
 
 def test_update_relations_creates_outputs(tmp_path):
-    # Setup dummy config and data
+
+    """Tests if the update_relations_main function generates required output files.
+    
+    This test verifies that the data pipeline correctly:
+    1. Creates normalized order information tables
+    2. Generates customer feature dataframe
+    3. Maintains merged data consistency
+    
+    Args:
+        tmp_path (pathlib.Path): pytest fixture providing temporary directory path
+    
+    Steps:
+        1. Creates temporary config file with test paths
+        2. Generates minimal sample order data
+        3. Executes update_relations_main with test config
+        4. Verifies output file creation
+    
+    Raises:
+        pytest.Fail: If the test encounters any unexpected errors or missing files
+    """
+    
     config_path = tmp_path / "config.ini"
     merged_data_path = tmp_path / "MergedData.csv"
     new_merged_data_path = tmp_path / "new_MergedData.csv"

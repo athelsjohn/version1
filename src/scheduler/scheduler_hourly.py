@@ -18,6 +18,22 @@ logger = logging.getLogger(__name__)
 SCRIPT_PATH = "/home/athel/Desktop/Litmus7/order/update_relations.py"
 
 def run_update():
+
+    """Execute the update_relations.py script and handle process results.
+    
+    Runs the update_relations.py script as a subprocess, captures output,
+    and logs process status and errors. Handles timeouts, process failures,
+    missing scripts, and unexpected errors.
+
+    Logs:
+        INFO: Process start, successful completion
+        ERROR: Timeout, process failure, missing script, unexpected errors
+        WARNING: Process output contains error messages
+
+    Raises:
+        None: All exceptions are caught and logged
+    """
+
     logger.info("Running update_relations.py")
     try:
         result = subprocess.run(
